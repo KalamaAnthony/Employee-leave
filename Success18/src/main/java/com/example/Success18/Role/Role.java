@@ -1,11 +1,12 @@
 package com.example.Success18.Role;
 
-import com.example.Success18.Department.Department;
-import com.example.Success18.Employee.Employee;
+//import com.example.Success18.Department.Department;
+//import com.example.Success18.Employee.Employee;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,17 +19,17 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-    private String roleName;
-    private String roleType;
+    private String name;
+   // private String roleType;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_department" ,referencedColumnName = "id")
-    private Department department;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "fk_department" ,referencedColumnName = "id")
+//    private Department department;
 
 
 //    @ManyToOne
@@ -45,11 +46,11 @@ public class Role {
 //    private Set<Employee> employeeSet = new HashSet<>();
 
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String postedBy;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Character postedFlag = 'N';
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    private String postedBy;
+//
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    private Character postedFlag = 'N';
 
 }
 

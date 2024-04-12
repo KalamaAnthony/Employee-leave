@@ -25,8 +25,8 @@ public class LeaveType {
     //@Column(updatable = false)
     private Long id;
     //private LeaveTypeEnum typeEnum;
-    //@Column(nullable = false, length = 100)
-    //@Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 100)
+    @Enumerated(EnumType.STRING)
     private LeaveTypeEnum leaveType;
     private String leaveDescription;
     //@Column(nullable = false, length = 3)

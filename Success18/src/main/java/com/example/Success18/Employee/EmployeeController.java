@@ -56,8 +56,8 @@ public class EmployeeController {
     }
 
     @PutMapping("/approveOrReject")
-    public EntityResponse approveOrReject(@RequestBody List<ChangeOfStatusDTO> changeOfStatusDTOList, @RequestParam String remarks) {
-        return employeeService.approveOrReject(changeOfStatusDTOList, remarks);
+    public EntityResponse approveOrReject(@RequestBody List<ChangeOfStatusDTO> changeOfStatusDTOList) {
+        return employeeService.approveOrReject(changeOfStatusDTOList);
 
     }
 }

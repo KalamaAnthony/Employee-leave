@@ -2,11 +2,12 @@ package com.example.Success18.Employee;
 
 
 
-import com.example.Success18.EmployeeLeave.Leave;
-import com.example.Success18.Role.Role;
+import com.example.Success18.Department.Department;
+//import com.example.Success18.EmployeeLeave.Leave;
 //import com.example.Success18.Utilities.LeaveTypeEnum;
+//import com.example.Success18.EmployeeLeave.LeaveStatusEnum;
+//import com.example.Success18.Role.Role;
 import com.example.Success18.Utilities.LeaveTypeEnum;
-import com.example.Success18.Utilities.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -15,16 +16,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.print.attribute.standard.JobState;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotEmpty;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -63,11 +58,11 @@ public class Employee {
 
 //   @NotEmpty(message = "Employee number is required")
    @Column(nullable = false)
-    private int employeeNumber;
+    private String empNo;
 
 
    @Column(nullable = false)
-    private int phoneNumber;
+    private String phoneNo;
 
 //   @NotEmpty(message = "KRA is required")
    @Column(nullable = false)
@@ -82,7 +77,7 @@ public class Employee {
 
 //   @NotEmpty(message = "Nssf number is required").The annotation can't be used for numbers
    @Column(nullable = false)
-    private BigInteger nssfNumber;
+    private BigInteger nssf_Number;
 
 //    @NotEmpty(message = "Nhif number is required")
     @Column(nullable = false)
@@ -96,8 +91,29 @@ public class Employee {
    @Column(nullable = false)
     private String nextOfKinNumber;
 
-   @Column
+   @Column(nullable = false)
     private String maritalStatus;
+
+   private String status= "Pending";
+
+   private String isHeadOfDepartment = "false";
+
+   @Column(nullable = false)
+   private Long departmentId;
+
+
+
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "department_id", referencedColumnName = "id")
+//    @JsonIgnore
+//    @ToString.Exclude
+//    private Department department;
+
+
+
+
+
 
 
 
@@ -105,18 +121,20 @@ public class Employee {
 
 
 //unidirectional One to Many. The mapped by is used to set the name of the parent class the owns the relationship in the other class in a bydirectional relationship
-// @OneToMany(mappedBy = "employee",cascade = CascadeType.ALL)
-//  private List<LeaveType> leaveTypes;
+ //@OneToMany(mappedBy = "employee",cascade = CascadeType.ALL)
+  //private List<LeaveType> leaveTypes;
 
 //One to One and the owning class is the employee class and is mapped by the role class
 // @OneToOne(cascade = CascadeType.ALL)
-// @JoinColumn(name = "fk_leave_id")
-// private Leave leave;
-@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)//means that all operations on the owning entity will be cascaded to the leave entity
-//The fetch lazy implies that the leave entities are loaded only when requested
-@JsonIgnore
-@ToString.Exclude
-private List<Leave> Leaves;
+// @JoinColumn(name = "department_id")
+// private Department department;
+
+
+//@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)//means that all operations on the owning entity will be cascaded to the leave entity
+////The fetch lazy implies that the leave entities are loaded only when requested
+//@JsonIgnore
+//@ToString.Exclude
+//private List<Leave> Leaves;
 
     //Many to Many
 //  @ManyToMany
@@ -163,15 +181,11 @@ private List<Leave> Leaves;
     private String remarks = "-";
 
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String status = StatusEnum.PENDING.toString();
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    private String status = LeaveStatusEnum.PENDING.toString();
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String leaveType = LeaveTypeEnum.ANNUAL_LEAVE.toString();
-
-
-
-
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    private String leaveType = LeaveTypeEnum.ANNUAL_LEAVE.toString();
 
 
 

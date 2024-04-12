@@ -1,5 +1,6 @@
 package com.example.Success18.Employee;
 
+import com.example.Success18.Department.DepartmentRepo;
 import com.example.Success18.Utilities.EntityResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +17,20 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-class EmployeeService {
-    private final EmployeeRepository employeeRepository;
-
+public class EmployeeService {
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+     EmployeeRepository employeeRepository;
+    @Autowired
+      DepartmentRepo departmentRepo;
 
+
+    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepo departmentRepo) {
+        this.employeeRepository = employeeRepository;
+        this.departmentRepo = departmentRepo;
     }
+
     @GetMapping//Logic for fetch all
-        public List<Employee> getAllEmployees() {
+    public List<Employee> getAllEmployees() {
 
         return employeeRepository.findAll();
     }
@@ -36,11 +41,16 @@ class EmployeeService {
         return employeeRepository.findById(id);
     }
 
-    @PostMapping
+
     public EntityResponse createEmployee( Employee employee) {
         EntityResponse entityResponse = new EntityResponse<>();
 
         try {
+            Long count = employeeRepository.count();
+            String empNo = "EMP00" + (count + 1);
+            employee.setEmpNo(empNo);
+
+
             // Save the employee to the database
             Employee savedEmployee = employeeRepository.save(employee);
 
@@ -157,6 +167,7 @@ class EmployeeService {
                 entityResponse.setEntity(existingEmployee);
                 entityResponse.setMessage("Employee retrieved successfully");
                 entityResponse.setStatusCode(HttpStatus.OK.value());
+
             } else {
                 entityResponse.setStatusCode(HttpStatus.NO_CONTENT.value());
                 entityResponse.setMessage("No Employees available");
@@ -174,7 +185,8 @@ class EmployeeService {
 
     }
 
-    public EntityResponse approveOrReject(List<ChangeOfStatusDTO> changeOfStatusDTOList, String remarks) {
+    public EntityResponse approveOrReject(List<ChangeOfStatusDTO> changeOfStatusDTOList) {
+        //TODO:We use List<ChangeOfStatusDTO> because of the possibilities of existence of more than one employee id in the class
 
             EntityResponse response = new EntityResponse<>();
             try {
@@ -182,19 +194,23 @@ class EmployeeService {
                     response.setMessage("You must provide at least one Employee for approval or rejection");
                     response.setStatusCode(HttpStatus.NOT_ACCEPTABLE.value());
                 }else{
+                    //TODO:Declare the new location for the updated employee to a new ArrayList/DEFINE A LIST
                     List<Employee> updatedEmployee = new ArrayList<>();
+                    //TODO:Loop through the List
                     for (ChangeOfStatusDTO changeOfStatusDTO :changeOfStatusDTOList){
+                        //TODO:Use Optional to check the possibility of occurrence of employee in the list or not
                         Optional<Employee>OptionalEmployee = employeeRepository.findById(changeOfStatusDTO.getId());
                         if (OptionalEmployee.isPresent()){
                             Employee employee = OptionalEmployee.get();
                             String Status = changeOfStatusDTO.getStatus().toUpperCase();
+                            //TODO:We can also use switch as an expression and use ->(lambda instead of the break statement)
                             switch (Status){
                                 case "APPROVED":
                                     employee.setStatus("APPROVED");
                                     employee.setHrApprovedBy("SYSTEM");
                                     employee.setHrApprovedOn(LocalDateTime.now());
                                     employee.setHrApprovedFlag('Y');
-                                    employee.setRemarks(remarks);
+                                    //employee.setRemarks(remarks);
                                     break;
                                 case "REJECTED":
                                     employee.setStatus("REJECTED");
@@ -211,6 +227,7 @@ class EmployeeService {
                                     return response;
 
                             }
+                            //TODO:Add the updated employee to the new ArrayList
                             updatedEmployee.add(employeeRepository.save(employee));
 
                         }else {

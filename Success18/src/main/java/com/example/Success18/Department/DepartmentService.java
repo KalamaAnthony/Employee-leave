@@ -23,6 +23,11 @@ public class DepartmentService {
     public EntityResponse addDepartment(Department department) {
         EntityResponse entityResponse = new EntityResponse<>();
         try {
+            Long count = departmentRepo.count();
+            String departmentCode = "KCG" + (count + 1);
+            department.setDepartmentCode(departmentCode);
+
+
             Department savedDepartment = departmentRepo.save(department);
             departmentRepo.save(savedDepartment);
             entityResponse.setEntity(savedDepartment);
